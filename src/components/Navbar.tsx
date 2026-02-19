@@ -4,11 +4,11 @@ import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
-  { label: "About", href: "#about" },
-  { label: "Skills", href: "#skills" },
-  { label: "Projects", href: "#projects" },
-  { label: "Blog", href: "#blog" },
-  { label: "Contact", href: "#contact" },
+  { label: "About", id: "about" },
+  { label: "Skills", id: "skills" },
+  { label: "Projects", id: "projects" },
+  { label: "Blog", id: "blog" },
+  { label: "Contact", id: "contact" },
 ];
 
 const Navbar = () => {
@@ -16,36 +16,72 @@ const Navbar = () => {
   const [mounted, setMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [active, setActive] = useState("");
 
   useEffect(() => setMounted(true), []);
 
+  // Blur background when scroll
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 20);
+
+      // detect active section
+      navLinks.forEach((link) => {
+        const section = document.getElementById(link.id);
+        if (section) {
+          const rect = section.getBoundingClientRect();
+          if (rect.top <= 120 && rect.bottom >= 120) {
+            setActive(link.id);
+          }
+        }
+      });
+    };
+
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // smooth scroll function
+  const scrollToSection = (id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    const yOffset = -80; // navbar height
+    const y =
+      el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+    window.scrollTo({ top: y, behavior: "smooth" });
+    setMobileOpen(false);
+  };
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "glass" : "bg-transparent"
+        scrolled ? "glass backdrop-blur-md" : "bg-transparent"
       }`}
     >
       <nav className="container mx-auto flex items-center justify-between px-6 py-4">
-        <a href="#" className="text-xl font-bold tracking-tight text-foreground">
+        <button
+          onClick={() => scrollToSection("hero")}
+          className="text-xl font-bold tracking-tight text-foreground"
+        >
           dev<span className="text-gradient">.folio</span>
-        </a>
+        </button>
 
         {/* Desktop */}
         <ul className="hidden md:flex items-center gap-8">
           {navLinks.map((l) => (
-            <li key={l.href}>
-              <a
-                href={l.href}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            <li key={l.id}>
+              <button
+                onClick={() => scrollToSection(l.id)}
+                className={`text-sm transition-colors ${
+                  active === l.id
+                    ? "text-foreground font-medium"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
               >
                 {l.label}
-              </a>
+              </button>
             </li>
           ))}
         </ul>
@@ -53,7 +89,9 @@ const Navbar = () => {
         <div className="flex items-center gap-3">
           {mounted && (
             <button
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              onClick={() =>
+                setTheme(theme === "dark" ? "light" : "dark")
+              }
               className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
               aria-label="Toggle theme"
             >
@@ -71,7 +109,7 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Mobile menu */}
+      {/* Mobile */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -82,14 +120,17 @@ const Navbar = () => {
           >
             <ul className="flex flex-col px-6 py-4 gap-4">
               {navLinks.map((l) => (
-                <li key={l.href}>
-                  <a
-                    href={l.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                <li key={l.id}>
+                  <button
+                    onClick={() => scrollToSection(l.id)}
+                    className={`text-sm transition-colors ${
+                      active === l.id
+                        ? "text-foreground font-medium"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
                   >
                     {l.label}
-                  </a>
+                  </button>
                 </li>
               ))}
             </ul>
