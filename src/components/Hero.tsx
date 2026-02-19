@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Mail } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Gradient background */}
       <div className="absolute inset-0 bg-gradient-hero dark:bg-gradient-hero" />
       <div className="absolute inset-0 bg-gradient-hero-light dark:bg-gradient-hero" />
 
@@ -33,18 +33,19 @@ const Hero = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a
-              href="#projects"
+            <Link
+              to="/projects"
               className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
             >
               View Projects <ArrowRight size={16} />
-            </a>
-            <a
-              href="#contact"
+            </Link>
+
+            <Link
+              to="/contact"
               className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-6 py-3 text-sm font-medium text-foreground hover:bg-accent transition-colors"
             >
               <Mail size={16} /> Contact Me
-            </a>
+            </Link>
           </div>
         </motion.div>
       </div>
