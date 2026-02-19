@@ -17,6 +17,8 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [active, setActive] = useState("");
+  const navigate = useNavigate();
+
 
   useEffect(() => setMounted(true), []);
 
@@ -37,19 +39,6 @@ useEffect(() => {
   }, [location]);;
 
   // smooth scroll function
-  const scrollToSection = (id) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-
-    const yOffset = -80; // navbar height
-    const y =
-      el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-
-    window.scrollTo({ top: y, behavior: "smooth" });
-    window.history.pushState(null, "", `/#/#${id}`);
-    setMobileOpen(false);
-  };
-
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -58,7 +47,7 @@ useEffect(() => {
     >
       <nav className="container mx-auto flex items-center justify-between px-6 py-4">
         <button
-          onClick={() => scrollToSection("hero")}
+          onClick={() => navigate("hero")}
           className="text-xl font-bold tracking-tight text-foreground"
         >
           dev<span className="text-gradient">.folio</span>
@@ -69,7 +58,7 @@ useEffect(() => {
           {navLinks.map((l) => (
             <li key={l.id}>
               <button
-                onClick={() => scrollToSection(l.id)}
+                onClick={() => navigate(l.id)}
                 className={`text-sm transition-colors ${
                   active === l.id
                     ? "text-foreground font-medium"
@@ -118,7 +107,7 @@ useEffect(() => {
               {navLinks.map((l) => (
                 <li key={l.id}>
                   <button
-                    onClick={() => scrollToSection(l.id)}
+                    onClick={() => navigate(l.id)}
                     className={`text-sm transition-colors ${
                       active === l.id
                         ? "text-foreground font-medium"
