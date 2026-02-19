@@ -1,10 +1,25 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Mail } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
+  const navigate = useNavigate();
+
+  const goToSection = (sectionId) => {
+    navigate("/"); // đảm bảo đang ở trang chủ
+
+    // delay nhẹ để chắc chắn DOM đã render
+    setTimeout(() => {
+      const el = document.getElementById(sectionId);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 100);
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Background */}
       <div className="absolute inset-0 bg-gradient-hero dark:bg-gradient-hero" />
       <div className="absolute inset-0 bg-gradient-hero-light dark:bg-gradient-hero" />
 
@@ -33,19 +48,19 @@ const Hero = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              to="/projects"
+            <button
+              onClick={() => goToSection("projects")}
               className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
             >
               View Projects <ArrowRight size={16} />
-            </Link>
+            </button>
 
-            <Link
-              to="/contact"
+            <button
+              onClick={() => goToSection("contact")}
               className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-6 py-3 text-sm font-medium text-foreground hover:bg-accent transition-colors"
             >
               <Mail size={16} /> Contact Me
-            </Link>
+            </button>
           </div>
         </motion.div>
       </div>
