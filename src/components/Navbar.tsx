@@ -21,25 +21,20 @@ const Navbar = () => {
   useEffect(() => setMounted(true), []);
 
   // Blur background when scroll
-  useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 20);
+useEffect(() => {
+  if (location.hash) {
+    const id = location.hash.replace("#", "");
+    const el = document.getElementById(id);
 
-      // detect active section
-      navLinks.forEach((link) => {
-        const section = document.getElementById(link.id);
-        if (section) {
-          const rect = section.getBoundingClientRect();
-          if (rect.top <= 120 && rect.bottom >= 120) {
-            setActive(link.id);
-          }
-        }
-      });
-    };
+    if (el) {
+      const yOffset = -80; // chiều cao navbar
+      const y =
+        el.getBoundingClientRect().top + window.pageYOffset + yOffset;
 
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  }
+  }, [location]);;
 
   // smooth scroll function
   const scrollToSection = (id) => {
