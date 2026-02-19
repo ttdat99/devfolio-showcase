@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Moon, Sun, Menu, X } from "lucide-react";
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const navLinks = [
   { label: "About", id: "about" },
@@ -13,32 +14,38 @@ const navLinks = [
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [mounted, setMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [active, setActive] = useState("");
-  const navigate = useNavigate();
-
 
   useEffect(() => setMounted(true), []);
 
-  // Blur background when scroll
-useEffect(() => {
-  if (location.hash) {
-    const id = location.hash.replace("#", "");
-    const el = document.getElementById(id);
+  // Handle scroll when hash changes
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace("#", "");
+      const el = document.getElementById(id);
 
-    if (el) {
-      const yOffset = -80; // chiều cao navbar
-      const y =
-        el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      if (el) {
+        const yOffset = -80;
+        const y =
+          el.getBoundingClientRect().top + window.pageYOffset + yOffset;
 
-      window.scrollTo({ top: y, behavior: "smooth" });
+        window.scrollTo({ top: y, behavior: "smooth" });
+        setActive(id);
+      }
     }
-  }
-  }, [location]);;
+  }, [location]);
 
-  // smooth scroll function
+  const handleNavigate = (id) => {
+    navigate(`/#${id}`);
+    setMobileOpen(false);
+  };
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -47,7 +54,7 @@ useEffect(() => {
     >
       <nav className="container mx-auto flex items-center justify-between px-6 py-4">
         <button
-          onClick={() => navigate("hero")}
+          onClick={() => handleNavigate("hero")}
           className="text-xl font-bold tracking-tight text-foreground"
         >
           dev<span className="text-gradient">.folio</span>
@@ -58,7 +65,7 @@ useEffect(() => {
           {navLinks.map((l) => (
             <li key={l.id}>
               <button
-                onClick={() => navigate(l.id)}
+                onClick={() => handleNavigate(l.id)}
                 className={`text-sm transition-colors ${
                   active === l.id
                     ? "text-foreground font-medium"
@@ -107,7 +114,7 @@ useEffect(() => {
               {navLinks.map((l) => (
                 <li key={l.id}>
                   <button
-                    onClick={() => navigate(l.id)}
+                    onClick={() => handleNavigate(l.id)}
                     className={`text-sm transition-colors ${
                       active === l.id
                         ? "text-foreground font-medium"
