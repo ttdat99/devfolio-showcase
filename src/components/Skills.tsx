@@ -98,34 +98,64 @@ const Skills = () => {
 
         {/* Tree View */}
         {viewMode === "tree" && (
-          <div className="space-y-6">
-            {categories.map((cat) => (
+          <div className="space-y-10">
+            {categories.map((cat, catIndex) => (
               <SectionReveal key={cat.category}>
                 <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="rounded-xl border border-border bg-card p-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: catIndex * 0.1 }}
+                  className="relative"
                 >
-                  <h3 className="text-base font-semibold text-foreground mb-4 flex items-center gap-2">
-                    <div className="w-1 h-6 bg-primary rounded-full" />
-                    {cat.category}
-                  </h3>
-                  <div className="pl-6 space-y-2">
-                    {cat.skills.map((skill, idx) => (
-                      <motion.div
-                        key={skill}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: idx * 0.05 }}
-                        className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                      >
-                        <div className="flex items-center">
-                          <div className="w-6 h-px bg-border" />
-                          <div className="w-2 h-2 rounded-full bg-primary/50" />
-                        </div>
-                        <span>{skill}</span>
-                      </motion.div>
-                    ))}
+                  {/* Category Header */}
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="flex items-center gap-3">
+                      <div className="w-1.5 h-8 bg-gradient-to-b from-primary to-primary/50 rounded-full shadow-lg shadow-primary/20" />
+                      <h3 className="text-lg font-bold text-foreground tracking-tight">
+                        {cat.category}
+                      </h3>
+                    </div>
+                    <div className="flex-1 h-px bg-gradient-to-r from-border to-transparent" />
+                    <span className="text-xs font-medium text-muted-foreground bg-accent px-3 py-1 rounded-full">
+                      {cat.skills.length} {cat.skills.length === 1 ? 'skill' : 'skills'}
+                    </span>
+                  </div>
+
+                  {/* Skills Tree - Fixed Axis Layout */}
+                  <div className="relative">
+                    {/* Define tree axis at exactly 24px from left */}
+                    <div className="absolute left-[24px] top-0 bottom-0 w-0 h-full" /> {/* Visual axis marker (invisible) */}
+                    
+                    {/* Vertical connector line - Centered on axis (24px - 1px = 23px) */}
+                    <div className="absolute left-[23px] top-0 bottom-6 w-[2px] bg-gradient-to-b from-border via-border/60 to-transparent" />
+                    
+                    {/* Skills container with precise left padding (24px + 12px gap + 8px dot + 16px spacing = 60px) */}
+                    <div className="pl-[60px] space-y-4">
+                      {cat.skills.map((skill, idx) => (
+                        <motion.div
+                          key={skill}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: catIndex * 0.1 + idx * 0.03 }}
+                          whileHover={{ x: 6 }}
+                          className="relative group h-10 flex items-center"
+                        >
+                          {/* Node dot - Positioned exactly on axis (24px center - 4px radius = 20px left) */}
+                          <div className="absolute left-[-60px] top-1/2 -translate-y-1/2 w-[8px] h-[8px] rounded-full bg-border border-[2.5px] border-background group-hover:bg-primary group-hover:border-primary group-hover:shadow-lg group-hover:shadow-primary/40 transition-all duration-200 z-10" 
+                               style={{ left: 'calc(-60px + 20px)' }} />
+                          
+                          {/* Horizontal connector line - From axis (24px) to dot edge (24px + 12px = 36px) */}
+                          <div className="absolute left-[-36px] top-1/2 -translate-y-1/2 w-[36px] h-[2px] bg-border group-hover:bg-primary/50 transition-colors duration-200" />
+                          
+                          {/* Skill card - Mathematically aligned height */}
+                          <div className="w-full rounded-lg border border-border/60 bg-card/50 backdrop-blur-sm px-4 h-10 flex items-center shadow-sm hover:shadow-md hover:border-primary/30 hover:bg-card transition-all duration-200 cursor-default">
+                            <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors duration-200">
+                              {skill}
+                            </span>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
                   </div>
                 </motion.div>
               </SectionReveal>

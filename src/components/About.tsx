@@ -1,8 +1,19 @@
 import SectionReveal from "./SectionReveal";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Button } from "@/components/ui/button";
+import { Download } from "lucide-react";
 
 const About = () => {
   const { t } = useLanguage();
+  
+  const handleDownloadCV = () => {
+    const link = document.createElement('a');
+    link.href = 'https://drive.google.com/uc?export=download&id=1HUlIsbExwqVV2Nyr3Fq2en7Gh9bvWIpc';
+    link.download = 'CV_DatTruongThanh.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
   
   return (
     <section id="about" className="py-24 sm:py-32">
@@ -19,6 +30,17 @@ const About = () => {
             <p>
               {t.about.paragraph2}
             </p>
+          </div>
+          <div className="mt-8">
+            <Button 
+              variant="outline" 
+              size="default"
+              onClick={handleDownloadCV}
+              className="group rounded-full transition-all hover:scale-105 hover:shadow-md"
+            >
+              <Download className="transition-transform group-hover:-translate-y-0.5" />
+              {t.about.downloadCV}
+            </Button>
           </div>
         </SectionReveal>
       </div>

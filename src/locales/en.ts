@@ -22,6 +22,7 @@ export const en = {
     heading: "I am a curious and passionate developer.",
     paragraph1: "I'm a backend engineer who thrives on designing scalable, maintainable systems. With deep expertise in Java and the Spring ecosystem, I focus on crafting clean APIs, optimizing database performance, and architecting solutions that handle real-world scale.",
     paragraph2: "My work spans RESTful API development, microservice architecture, system design, and performance optimization. I'm passionate about writing code that's not just functional, but elegant — and sharing what I learn through technical writing.",
+    downloadCV: "Download CV",
   },
   
   // Skills Section

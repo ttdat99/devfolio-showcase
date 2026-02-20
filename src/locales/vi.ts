@@ -24,6 +24,7 @@ export const vi: TranslationKeys = {
     heading: "Tôi là một lập trình viên tò mò và đam mê.",
     paragraph1: "Tôi là một kỹ sư backend chuyên thiết kế các hệ thống có khả năng mở rộng và bảo trì. Với chuyên môn sâu về Java và hệ sinh thái Spring, tôi tập trung vào việc tạo ra các API sạch, tối ưu hóa hiệu suất cơ sở dữ liệu và thiết kế các giải pháp xử lý quy mô thực tế.",
     paragraph2: "Công việc của tôi bao gồm phát triển RESTful API, kiến trúc microservice, thiết kế hệ thống và tối ưu hóa hiệu suất. Tôi đam mê viết code không chỉ hoạt động tốt mà còn tinh tế — và chia sẻ những gì tôi học được thông qua viết kỹ thuật.",
+    downloadCV: "Tải CV",
   },
   
   // Skills Section
