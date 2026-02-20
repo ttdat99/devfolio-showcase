@@ -39,7 +39,7 @@ const Contact = () => {
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   className="w-full rounded-lg border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                  placeholder="Your name"
+                  placeholder="Dat Truong Thanh"
                 />
               </div>
               <div>

@@ -29,7 +29,7 @@ const Hero = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold mb-4">
-            Hi, I'm <span className="text-gradient">Your Name</span>
+            Hi, I'm <span className="text-gradient">Dat Truong Thanh</span>
           </h1>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
