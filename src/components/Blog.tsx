@@ -1,11 +1,19 @@
 import { ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import SectionReveal from "./SectionReveal";
-import { blogPosts } from "@/data/blogData";
+import { fetchBlogPosts, fallbackBlogPosts } from "@/data/blogData";
 
 const Blog = () => {
   const navigate = useNavigate();
+  
+  // Fetch blog posts from Google Sheets
+  const { data: blogPosts = fallbackBlogPosts, isLoading } = useQuery({
+    queryKey: ["blogPosts"],
+    queryFn: fetchBlogPosts,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
   
   // Get latest 3 posts
   const latestPosts = blogPosts.slice(0, 3);
@@ -29,7 +37,18 @@ const Blog = () => {
       </SectionReveal>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {latestPosts.map((post) => (
+        {isLoading ? (
+          // Loading skeleton
+          Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="rounded-xl border border-border bg-card p-6 h-full animate-pulse">
+              <div className="h-4 bg-accent rounded w-20 mb-3"></div>
+              <div className="h-6 bg-accent rounded mb-2"></div>
+              <div className="h-4 bg-accent rounded mb-1"></div>
+              <div className="h-4 bg-accent rounded w-4/5"></div>
+            </div>
+          ))
+        ) : (
+          latestPosts.map((post) => (
           <SectionReveal key={post.id}>
             <motion.button
               onClick={() => navigate(`/blog/${post.id}`)}
@@ -47,7 +66,8 @@ const Blog = () => {
               </p>
             </motion.button>
           </SectionReveal>
-        ))}
+        ))
+        )}
       </div>
     </div>
   </section>

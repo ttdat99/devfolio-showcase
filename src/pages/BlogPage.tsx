@@ -1,13 +1,21 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Calendar, ArrowRight } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SectionReveal from "@/components/SectionReveal";
-import { blogPosts } from "@/data/blogData";
+import { fetchBlogPosts, fallbackBlogPosts } from "../data/blogData";
 
 const BlogPage = () => {
   const navigate = useNavigate();
+
+  // Fetch blog posts from Google Sheets
+  const { data: blogPosts = fallbackBlogPosts, isLoading } = useQuery({
+    queryKey: ["blogPosts"],
+    queryFn: fetchBlogPosts,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -44,6 +52,23 @@ const BlogPage = () => {
         {/* Blog Posts Grid */}
         <section className="py-12 sm:py-16 pb-24">
           <div className="container mx-auto px-6">
+            {isLoading ? (
+              // Loading skeleton
+              <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="rounded-xl border border-border bg-card overflow-hidden h-full animate-pulse">
+                    <div className="h-48 sm:h-56 bg-accent"></div>
+                    <div className="p-6">
+                      <div className="h-4 bg-accent rounded w-24 mb-3"></div>
+                      <div className="h-6 bg-accent rounded mb-3"></div>
+                      <div className="h-4 bg-accent rounded mb-2"></div>
+                      <div className="h-4 bg-accent rounded w-5/6 mb-4"></div>
+                      <div className="h-4 bg-accent rounded w-20"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {blogPosts.map((post, index) => (
                 <div key={post.id}>
@@ -101,9 +126,10 @@ const BlogPage = () => {
                 </div>
               ))}
             </div>
+            )}
 
             {/* Empty State */}
-            {blogPosts.length === 0 && (
+            {!isLoading && blogPosts.length === 0 && (
               <div className="text-center py-16">
                 <p className="text-muted-foreground">
                   No blog posts available yet. Check back soon!

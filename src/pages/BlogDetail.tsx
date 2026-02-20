@@ -1,39 +1,23 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Calendar, ArrowLeft, Clock } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { blogPosts } from "@/data/blogData";
+import { fetchBlogPosts, fallbackBlogPosts } from "@/data/blogData";
 
 const BlogDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   
+  // Fetch blog posts from Google Sheets
+  const { data: blogPosts = fallbackBlogPosts, isLoading } = useQuery({
+    queryKey: ["blogPosts"],
+    queryFn: fetchBlogPosts,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+  
   const post = blogPosts.find((p) => p.id === Number(id));
-
-  if (!post) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
-        <main className="pt-24 pb-16">
-          <div className="container mx-auto px-6 text-center">
-            <h1 className="text-4xl font-bold mb-4">Post Not Found</h1>
-            <p className="text-muted-foreground mb-8">
-              The blog post you're looking for doesn't exist.
-            </p>
-            <button
-              onClick={() => navigate("/blog")}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
-            >
-              <ArrowLeft size={18} />
-              Back to Blog
-            </button>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -56,7 +40,43 @@ const BlogDetail = () => {
       <Navbar />
       
       <main className="pt-24">
-        {/* Hero Section */}
+        {isLoading ? (
+          // Loading skeleton
+          <article className="py-12 sm:py-16">
+            <div className="container mx-auto px-6 max-w-4xl">
+              <div className="animate-pulse">
+                <div className="h-4 bg-accent rounded w-32 mb-8"></div>
+                <div className="h-4 bg-accent rounded w-24 mb-6"></div>
+                <div className="h-12 bg-accent rounded mb-6"></div>
+                <div className="h-6 bg-accent rounded mb-8"></div>
+                <div className="h-64 bg-accent rounded-xl mb-12"></div>
+                <div className="space-y-4">
+                  <div className="h-4 bg-accent rounded"></div>
+                  <div className="h-4 bg-accent rounded w-5/6"></div>
+                  <div className="h-4 bg-accent rounded w-4/5"></div>
+                </div>
+              </div>
+            </div>
+          </article>
+        ) : !post ? (
+          // Not found state
+          <div className="py-12 sm:py-16">
+            <div className="container mx-auto px-6 text-center">
+              <h1 className="text-4xl font-bold mb-4">Post Not Found</h1>
+              <p className="text-muted-foreground mb-8">
+                The blog post you're looking for doesn't exist.
+              </p>
+              <button
+                onClick={() => navigate("/blog")}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+              >
+                <ArrowLeft size={18} />
+                Back to Blog
+              </button>
+            </div>
+          </div>
+        ) : (
+        /* Hero Section */
         <article className="py-12 sm:py-16">
           <div className="container mx-auto px-6">
             {/* Back Button */}
@@ -187,6 +207,7 @@ const BlogDetail = () => {
             </motion.div>
           </div>
         </article>
+        )}
       </main>
 
       <Footer />
