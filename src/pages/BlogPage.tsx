@@ -6,9 +6,11 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SectionReveal from "@/components/SectionReveal";
 import { fetchBlogPosts, fallbackBlogPosts } from "../data/blogData";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const BlogPage = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   // Fetch blog posts from Google Sheets
   const { data: blogPosts = fallbackBlogPosts, isLoading } = useQuery({
@@ -19,11 +21,7 @@ const BlogPage = () => {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+    return date.toLocaleDateString(t.date.locale, t.date.fullDateFormat);
   };
 
   return (
@@ -36,14 +34,13 @@ const BlogPage = () => {
           <div className="container mx-auto px-6">
             <SectionReveal>
               <p className="text-sm font-medium text-primary mb-2 tracking-wide uppercase">
-                Blog
+                {t.blog.title}
               </p>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground mb-4">
-                Latest Articles
+                {t.blog.latestArticles}
               </h1>
               <p className="text-lg text-muted-foreground max-w-2xl">
-                Thoughts on software development, architecture, and technology. 
-                Sharing knowledge and experiences from building scalable systems.
+                {t.blog.subtitle}
               </p>
             </SectionReveal>
           </div>

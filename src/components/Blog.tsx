@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import SectionReveal from "./SectionReveal";
 import { fetchBlogPosts, fallbackBlogPosts } from "@/data/blogData";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Blog = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   
   // Fetch blog posts from Google Sheets
   const { data: blogPosts = fallbackBlogPosts, isLoading } = useQuery({
@@ -20,7 +22,7 @@ const Blog = () => {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
+    return date.toLocaleDateString(t.date.locale, {
       year: "numeric",
       month: "short",
     });
@@ -30,9 +32,9 @@ const Blog = () => {
   <section id="blog" className="py-24 sm:py-32">
     <div className="container mx-auto px-6">
       <SectionReveal>
-        <p className="text-sm font-medium text-primary mb-2 tracking-wide uppercase">Blog</p>
+        <p className="text-sm font-medium text-primary mb-2 tracking-wide uppercase">{t.blog.title}</p>
         <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground mb-12">
-          Latest writing.
+          {t.blog.heading}
         </h2>
       </SectionReveal>
 

@@ -2,10 +2,12 @@ import { motion } from "framer-motion";
 import { ArrowRight, Mail } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Hero = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useLanguage();
 
   // Tự động scroll khi có hash
   useEffect(() => {
@@ -29,7 +31,7 @@ const Hero = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold mb-4">
-            Hi, I'm <span className="text-gradient">Dat Truong Thanh</span>
+            {t.hero.greeting} <span className="text-gradient">{t.hero.name}</span>
           </h1>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -37,14 +39,14 @@ const Hero = () => {
               onClick={() => navigate("/#projects")}
               className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
             >
-              View Projects <ArrowRight size={16} />
+              {t.hero.viewProjects} <ArrowRight size={16} />
             </button>
 
             <button
               onClick={() => navigate("/#contact")}
               className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-6 py-3 text-sm font-medium text-foreground hover:bg-accent transition-colors"
             >
-              <Mail size={16} /> Contact Me
+              <Mail size={16} /> {t.hero.contactMe}
             </button>
           </div>
         </motion.div>

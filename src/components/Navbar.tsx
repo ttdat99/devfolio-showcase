@@ -1,21 +1,23 @@
 import { useState, useEffect } from "react";
-import { Moon, Sun, Menu, X } from "lucide-react";
+import { Moon, Sun, Menu, X, Languages } from "lucide-react";
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
-
-const navLinks = [
-  { label: "About", id: "about", type: "scroll" },
-  { label: "Skills", id: "skills", type: "scroll" },
-  { label: "Projects", id: "projects", type: "scroll" },
-  { label: "Blog", id: "blog", type: "page", path: "/blog" },
-  { label: "Contact", id: "contact", type: "scroll" },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme();
+  const { language, setLanguage, t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
+  
+  const navLinks = [
+    { label: t.nav.about, id: "about", type: "scroll" },
+    { label: t.nav.skills, id: "skills", type: "scroll" },
+    { label: t.nav.projects, id: "projects", type: "scroll" },
+    { label: t.nav.blog, id: "blog", type: "page", path: "/blog" },
+    { label: t.nav.contact, id: "contact", type: "scroll" },
+  ];
 
   const [mounted, setMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -104,15 +106,26 @@ const Navbar = () => {
 
         <div className="flex items-center gap-3">
           {mounted && (
-            <button
-              onClick={() =>
-                setTheme(theme === "dark" ? "light" : "dark")
-              }
-              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-              aria-label="Toggle theme"
-            >
-              {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
+            <>
+              <button
+                onClick={() => setLanguage(language === "en" ? "vi" : "en")}
+                className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+                aria-label="Toggle language"
+              >
+                <Languages size={16} />
+                <span>{language === "en" ? "ENG" : "VI"}</span>
+              </button>
+              
+              <button
+                onClick={() =>
+                  setTheme(theme === "dark" ? "light" : "dark")
+                }
+                className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+                aria-label="Toggle theme"
+              >
+                {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
+            </>
           )}
 
           <button
@@ -149,6 +162,19 @@ const Navbar = () => {
                   </button>
                 </li>
               ))}
+              
+              {/* Language Toggle for Mobile */}
+              {mounted && (
+                <li className="pt-2 border-t border-border">
+                  <button
+                    onClick={() => setLanguage(language === "en" ? "vi" : "en")}
+                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <Languages size={16} />
+                    <span>{language === "en" ? "English" : "Tiếng Việt"}</span>
+                  </button>
+                </li>
+              )}
             </ul>
           </motion.div>
         )}

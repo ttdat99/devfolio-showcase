@@ -1,14 +1,16 @@
 import { Mail, Github, Linkedin, Send } from "lucide-react";
 import SectionReveal from "./SectionReveal";
 import { useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Contact = () => {
+  const { t } = useLanguage();
   const [form, setForm] = useState({ name: "", email: "", message: "" });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Frontend only — no submission
-    alert("Thanks for reaching out! (This is a demo — no message was sent.)");
+    alert(t.contact.successMessage);
     setForm({ name: "", email: "", message: "" });
   };
 
@@ -16,12 +18,12 @@ const Contact = () => {
     <section id="contact" className="py-24 sm:py-32">
       <div className="container mx-auto px-6">
         <SectionReveal>
-          <p className="text-sm font-medium text-primary mb-2 tracking-wide uppercase">Contact</p>
+          <p className="text-sm font-medium text-primary mb-2 tracking-wide uppercase">{t.contact.title}</p>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground mb-4">
-            Get in touch.
+            {t.contact.heading}
           </h2>
           <p className="text-muted-foreground mb-10 max-w-lg">
-            Have a project in mind or want to chat? Drop me a message or connect on social.
+            {t.contact.subtitle}
           </p>
         </SectionReveal>
 
@@ -30,7 +32,7 @@ const Contact = () => {
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
                 <label htmlFor="name" className="block text-xs font-medium text-muted-foreground mb-1.5">
-                  Name
+                  {t.contact.name}
                 </label>
                 <input
                   id="name"
@@ -39,12 +41,12 @@ const Contact = () => {
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   className="w-full rounded-lg border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                  placeholder="Dat Truong Thanh"
+                  placeholder={t.contact.namePlaceholder}
                 />
               </div>
               <div>
                 <label htmlFor="email" className="block text-xs font-medium text-muted-foreground mb-1.5">
-                  Email
+                  {t.contact.email}
                 </label>
                 <input
                   id="email"
@@ -53,12 +55,12 @@ const Contact = () => {
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   className="w-full rounded-lg border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                  placeholder="you@example.com"
+                  placeholder={t.contact.emailPlaceholder}
                 />
               </div>
               <div>
                 <label htmlFor="message" className="block text-xs font-medium text-muted-foreground mb-1.5">
-                  Message
+                  {t.contact.message}
                 </label>
                 <textarea
                   id="message"
@@ -67,14 +69,14 @@ const Contact = () => {
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
                   className="w-full rounded-lg border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
-                  placeholder="Your message..."
+                  placeholder={t.contact.messagePlaceholder}
                 />
               </div>
               <button
                 type="submit"
                 className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
               >
-                <Send size={16} /> Send Message
+                <Send size={16} /> {t.contact.send}
               </button>
             </form>
           </SectionReveal>
