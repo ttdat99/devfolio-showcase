@@ -6,7 +6,7 @@ const About = () => (
       <SectionReveal>
         <p className="text-sm font-medium text-primary mb-2 tracking-wide uppercase">About</p>
         <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground mb-8">
-          Building robust systems.
+          I am a curious and passionate developer.
         </h2>
         <div className="max-w-2xl space-y-4 text-muted-foreground leading-relaxed">
           <p>

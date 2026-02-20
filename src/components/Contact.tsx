@@ -95,7 +95,7 @@ const Contact = () => {
                 className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors"
               >
                 <Github size={18} />
-                <span className="text-sm">github.com/yourname</span>
+                <span className="text-sm">github.com/ttdat99</span>
               </a>
               <a
                 href="https://linkedin.com"
@@ -104,7 +104,7 @@ const Contact = () => {
                 className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors"
               >
                 <Linkedin size={18} />
-                <span className="text-sm">linkedin.com/in/yourname</span>
+                <span className="text-sm">linkedin.com/in/ttdat99</span>
               </a>
             </div>
           </SectionReveal>
