@@ -46,6 +46,15 @@ export const en = {
     years: "years",
     present: "Present",
     lessThanMonth: "< 1 month",
+    overview: "Overview",
+    projectInfo: "Project Information",
+    customer: "Customer",
+    teamSize: "Team Size",
+    members: "members",
+    technologies: "Technologies Used",
+    backToHome: "Back to Home",
+    projectNotFound: "Project Not Found",
+    projectNotFoundDesc: "The project you're looking for doesn't exist.",
   },
   
   // Blog Section

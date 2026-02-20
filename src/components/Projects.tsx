@@ -1,60 +1,10 @@
 import { ExternalLink, Github, Calendar } from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import SectionReveal from "./SectionReveal";
 import { useLanguage } from "@/contexts/LanguageContext";
-
-interface Project {
-  title: string;
-  description: string;
-  stack: string[];
-  from: string;
-  to: string | "Present";
-  githubUrl?: string;
-  demoUrl?: string;
-}
-
-const projects: Project[] = [
-  {
-    title: "E-commerce REST API",
-    description:
-      "A fully-featured REST API for an e-commerce platform with product management, cart operations, and order processing.",
-    stack: ["Java", "Spring Boot", "PostgreSQL", "Redis"],
-    from: "2024-10",
-    to: "Present",
-    githubUrl: "#",
-    demoUrl: "#",
-  },
-  {
-    title: "JWT Authentication System",
-    description:
-      "Secure authentication & authorization microservice with JWT tokens, refresh flows, and role-based access control.",
-    stack: ["Java", "Spring Security", "JWT", "MySQL"],
-    from: "2024-07",
-    to: "2024-09",
-    githubUrl: "#",
-    demoUrl: "#",
-  },
-  {
-    title: "Dockerized Microservice",
-    description:
-      "A containerized microservice architecture with service discovery, API gateway, and centralized logging.",
-    stack: ["Docker", "Spring Cloud", "Nginx", "PostgreSQL"],
-    from: "2024-04",
-    to: "2024-06",
-    githubUrl: "#",
-    demoUrl: "#",
-  },
-  {
-    title: "Memory Leak Investigation",
-    description:
-      "An educational demo showcasing common Java memory leak patterns, profiling techniques, and resolution strategies.",
-    stack: ["Java", "JVM", "VisualVM", "JProfiler"],
-    from: "2024-01",
-    to: "2024-03",
-    githubUrl: "#",
-    demoUrl: "#",
-  },
-];
+import { fetchProjects, fallbackProjects, Project } from "@/data/projectsData";
 
 const formatDateRange = (from: string, to: string | "Present", locale: string, presentText: string) => {
   const formatMonth = (dateStr: string) => {
@@ -94,9 +44,17 @@ const calculateDuration = (from: string, to: string | "Present", t: any) => {
   return `${years} ${t.projects.year}${years > 1 ? "s" : ""} ${remainingMonths} ${t.projects.month === "month" ? "mo" : "th"}`;
 };
 
+const isValidUrl = (url?: string): boolean => {
+  return !!url && url.trim() !== "" && url.trim() !== "#";
+};
+
 const ProjectCard = ({ project, index }: { project: Project; index: number }) => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const isEven = index % 2 === 0;
+  
+  const hasGithub = isValidUrl(project.githubUrl);
+  const hasDemo = isValidUrl(project.demoUrl);
   
   return (
     <motion.div
@@ -181,15 +139,9 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
             isEven ? "md:pl-12" : "md:pr-12"
           }`}
         >
-          <div className="group rounded-2xl border border-border/50 bg-card backdrop-blur-sm p-6 shadow-lg hover:shadow-2xl hover:border-primary/30 transition-all duration-300 relative z-10">
-            {/* Placeholder Image */}
-            <div className="rounded-xl bg-gradient-to-br from-accent via-accent/80 to-accent/50 h-44 mb-5 flex items-center justify-center overflow-hidden relative group-hover:scale-[1.02] transition-transform duration-300">
-              <span className="text-xs text-muted-foreground font-medium">{t.projects.preview}</span>
-              <div className="absolute inset-0 bg-gradient-to-t from-background/30 to-transparent" />
-              
-              {/* Decorative corner accent */}
-              <div className="absolute top-0 right-0 w-20 h-20 bg-primary/5 blur-2xl" />
-            </div>
+          <div className="group rounded-2xl border border-border/50 bg-card backdrop-blur-sm p-6 shadow-lg hover:shadow-2xl hover:border-primary/30 transition-all duration-300 relative z-10 cursor-pointer"
+               onClick={() => navigate(`/projects/${project.id}`)}>
+            
 
             {/* Title */}
             <h3 className="text-xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors">
@@ -203,31 +155,43 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
 
             {/* Tech Stack */}
             <div className="flex flex-wrap gap-2 mb-6">
-              {project.stack.map((tech) => (
+              {project.stack.split(',').map((tech) => (
                 <span
-                  key={tech}
+                  key={tech.trim()}
                   className="rounded-lg bg-accent/60 px-3 py-1.5 text-xs font-medium text-accent-foreground border border-border/50 hover:border-primary/30 transition-colors"
                 >
-                  {tech}
+                  {tech.trim()}
                 </span>
               ))}
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-3">
-              <a
-                href={project.githubUrl}
-                className="inline-flex items-center gap-2 rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-foreground hover:bg-accent hover:border-primary/30 transition-all duration-200"
-              >
-                <Github size={16} /> {t.projects.code}
-              </a>
-              <a
-                href={project.demoUrl}
-                className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90 hover:shadow-lg hover:shadow-primary/30 transition-all duration-200"
-              >
-                <ExternalLink size={16} /> {t.projects.demo}
-              </a>
-            </div>
+            {(hasGithub || hasDemo) && (
+              <div className="flex gap-3">
+                {hasGithub && (
+                  <a
+                    href={project.githubUrl}
+                    onClick={(e) => e.stopPropagation()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-foreground hover:bg-accent hover:border-primary/30 transition-all duration-200"
+                  >
+                    <Github size={16} /> {t.projects.code}
+                  </a>
+                )}
+                {hasDemo && (
+                  <a
+                    href={project.demoUrl}
+                    onClick={(e) => e.stopPropagation()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90 hover:shadow-lg hover:shadow-primary/30 transition-all duration-200"
+                  >
+                    <ExternalLink size={16} /> {t.projects.demo}
+                  </a>
+                )}
+              </div>
+            )}
           </div>
         </motion.div>
       </div>
@@ -237,6 +201,13 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
 
 const Projects = () => {
   const { t } = useLanguage();
+  
+  // Fetch projects from Google Sheets
+  const { data: projects = fallbackProjects, isLoading } = useQuery({
+    queryKey: ["projects"],
+    queryFn: fetchProjects,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
   
   // Sort projects by start date (newest first)
   const sortedProjects = [...projects].sort((a, b) => {
@@ -271,12 +242,35 @@ const Projects = () => {
             <div className="absolute inset-0 w-px bg-gradient-to-b from-transparent via-primary/30 to-transparent left-0" />
           </div>
 
+          {/* Loading State */}
+          {isLoading && (
+            <div className="space-y-20 md:space-y-24 relative" style={{ zIndex: 1 }}>
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="flex justify-center">
+                  <div className="w-full max-w-xl rounded-2xl border border-border bg-card p-6 animate-pulse">
+                    <div className="h-44 bg-accent rounded-xl mb-5"></div>
+                    <div className="h-6 bg-accent rounded mb-3 w-3/4"></div>
+                    <div className="h-4 bg-accent rounded mb-2"></div>
+                    <div className="h-4 bg-accent rounded w-5/6 mb-4"></div>
+                    <div className="flex gap-2 mb-4">
+                      <div className="h-8 bg-accent rounded w-20"></div>
+                      <div className="h-8 bg-accent rounded w-24"></div>
+                      <div className="h-8 bg-accent rounded w-16"></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
           {/* Timeline Items */}
-          <div className="space-y-20 md:space-y-24 relative" style={{ zIndex: 1 }}>
-            {sortedProjects.map((project, index) => (
-              <ProjectCard key={project.title} project={project} index={index} />
-            ))}
-          </div>
+          {!isLoading && (
+            <div className="space-y-20 md:space-y-24 relative" style={{ zIndex: 1 }}>
+              {sortedProjects.map((project, index) => (
+                <ProjectCard key={project.id} project={project} index={index} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </section>

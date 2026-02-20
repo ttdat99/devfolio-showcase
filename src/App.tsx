@@ -8,6 +8,7 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import Index from "./pages/Index";
 import BlogPage from "./pages/BlogPage";
 import BlogDetail from "./pages/BlogDetail";
+import ProjectDetail from "./pages/ProjectDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/blog" element={<BlogPage />} />
               <Route path="/blog/:id" element={<BlogDetail />} />
+              <Route path="/projects/:id" element={<ProjectDetail />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </HashRouter>

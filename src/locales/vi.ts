@@ -48,6 +48,15 @@ export const vi: TranslationKeys = {
     years: "năm",
     present: "Hiện tại",
     lessThanMonth: "< 1 tháng",
+    overview: "Tổng quan",
+    projectInfo: "Thông tin dự án",
+    customer: "Khách hàng",
+    teamSize: "Quy mô nhóm",
+    members: "thành viên",
+    technologies: "Công nghệ sử dụng",
+    backToHome: "Về trang chủ",
+    projectNotFound: "Không tìm thấy dự án",
+    projectNotFoundDesc: "Dự án bạn đang tìm kiếm không tồn tại.",
   },
   
   // Blog Section
