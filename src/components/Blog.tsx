@@ -1,29 +1,24 @@
 import { ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import SectionReveal from "./SectionReveal";
+import { blogPosts } from "@/data/blogData";
 
-const posts = [
-  {
-    title: "Understanding JVM Garbage Collection",
-    description:
-      "A deep dive into how the JVM manages memory, different GC algorithms, and tuning strategies for production systems.",
-    date: "Jan 2025",
-  },
-  {
-    title: "Building REST APIs with Spring Boot 3",
-    description:
-      "Best practices for structuring, documenting, and securing production-grade REST APIs using modern Spring Boot.",
-    date: "Dec 2024",
-  },
-  {
-    title: "Docker for Java Developers",
-    description:
-      "From Dockerfile basics to multi-stage builds — everything you need to containerize your Java applications.",
-    date: "Nov 2024",
-  },
-];
+const Blog = () => {
+  const navigate = useNavigate();
+  
+  // Get latest 3 posts
+  const latestPosts = blogPosts.slice(0, 3);
 
-const Blog = () => (
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+    });
+  };
+
+  return (
   <section id="blog" className="py-24 sm:py-32">
     <div className="container mx-auto px-6">
       <SectionReveal>
@@ -34,15 +29,15 @@ const Blog = () => (
       </SectionReveal>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {posts.map((post) => (
-          <SectionReveal key={post.title}>
-            <motion.a
-              href="#"
+        {latestPosts.map((post) => (
+          <SectionReveal key={post.id}>
+            <motion.button
+              onClick={() => navigate(`/blog/${post.id}`)}
               whileHover={{ y: -4 }}
               transition={{ type: "spring", stiffness: 300 }}
-              className="group block rounded-xl border border-border bg-card p-6 h-full"
+              className="group block rounded-xl border border-border bg-card p-6 h-full text-left w-full"
             >
-              <p className="text-xs text-muted-foreground mb-3">{post.date}</p>
+              <p className="text-xs text-muted-foreground mb-3">{formatDate(post.createdAt)}</p>
               <h3 className="text-base font-semibold text-foreground mb-2 group-hover:text-primary transition-colors flex items-center gap-1">
                 {post.title}
                 <ArrowUpRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -50,12 +45,13 @@ const Blog = () => (
               <p className="text-sm text-muted-foreground leading-relaxed">
                 {post.description}
               </p>
-            </motion.a>
+            </motion.button>
           </SectionReveal>
         ))}
       </div>
     </div>
   </section>
-);
+  );
+};
 
 export default Blog;

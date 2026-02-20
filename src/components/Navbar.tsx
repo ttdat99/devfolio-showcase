@@ -5,11 +5,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const navLinks = [
-  { label: "About", id: "about" },
-  { label: "Skills", id: "skills" },
-  { label: "Projects", id: "projects" },
-  { label: "Blog", id: "blog" },
-  { label: "Contact", id: "contact" },
+  { label: "About", id: "about", type: "scroll" },
+  { label: "Skills", id: "skills", type: "scroll" },
+  { label: "Projects", id: "projects", type: "scroll" },
+  { label: "Blog", id: "blog", type: "page", path: "/blog" },
+  { label: "Contact", id: "contact", type: "scroll" },
 ];
 
 const Navbar = () => {
@@ -23,6 +23,16 @@ const Navbar = () => {
   const [active, setActive] = useState("");
 
   useEffect(() => setMounted(true), []);
+
+  // Handle scroll detection
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Handle scroll when hash changes
   useEffect(() => {
@@ -41,23 +51,37 @@ const Navbar = () => {
     }
   }, [location]);
 
-  const handleNavigate = (id) => {
-    navigate(`/#${id}`);
+  // Set active based on current path
+  useEffect(() => {
+    if (location.pathname === "/blog") {
+      setActive("blog");
+    } else if (location.pathname === "/" && !location.hash) {
+      setActive("hero");
+    }
+  }, [location.pathname]);
+
+  const handleNavigate = (link) => {
+    if (link.type === "page") {
+      navigate(link.path);
+      setActive(link.id);
+    } else {
+      navigate(`/#${link.id}`);
+    }
     setMobileOpen(false);
   };
 
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "glass backdrop-blur-md" : "bg-transparent"
+        scrolled ? "glass backdrop-blur-md shadow-lg" : "bg-transparent"
       }`}
     >
       <nav className="container mx-auto flex items-center justify-between px-6 py-4">
         <button
-          onClick={() => handleNavigate("hero")}
+          onClick={() => navigate("/")}
           className="text-xl font-bold tracking-tight text-foreground"
         >
-          dev<span className="text-gradient">.folio</span>
+          dat<span className="text-gradient">.folio</span>
         </button>
 
         {/* Desktop */}
@@ -65,7 +89,7 @@ const Navbar = () => {
           {navLinks.map((l) => (
             <li key={l.id}>
               <button
-                onClick={() => handleNavigate(l.id)}
+                onClick={() => handleNavigate(l)}
                 className={`text-sm transition-colors ${
                   active === l.id
                     ? "text-foreground font-medium"
@@ -114,7 +138,7 @@ const Navbar = () => {
               {navLinks.map((l) => (
                 <li key={l.id}>
                   <button
-                    onClick={() => handleNavigate(l.id)}
+                    onClick={() => handleNavigate(l)}
                     className={`text-sm transition-colors ${
                       active === l.id
                         ? "text-foreground font-medium"
