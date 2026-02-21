@@ -51,35 +51,37 @@ const BlogPage = () => {
           <div className="container mx-auto px-6">
             {isLoading ? (
               // Loading skeleton
-              <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid auto-rows-fr gap-8 sm:grid-cols-2 lg:grid-cols-3">
                 {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="rounded-xl border border-border bg-card overflow-hidden h-full animate-pulse">
-                    <div className="h-48 sm:h-56 bg-accent"></div>
-                    <div className="p-6">
+                  <article
+                    key={i}
+                    className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card animate-pulse"
+                  >
+                    <div className="aspect-[16/10] bg-accent" />
+                    <div className="flex flex-1 flex-col p-6">
                       <div className="h-4 bg-accent rounded w-24 mb-3"></div>
                       <div className="h-6 bg-accent rounded mb-3"></div>
                       <div className="h-4 bg-accent rounded mb-2"></div>
-                      <div className="h-4 bg-accent rounded w-5/6 mb-4"></div>
+                      <div className="h-4 bg-accent rounded w-5/6 mb-6"></div>
                       <div className="h-4 bg-accent rounded w-20"></div>
                     </div>
-                  </div>
+                  </article>
                 ))}
               </div>
             ) : (
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid auto-rows-fr gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {blogPosts.map((post, index) => (
-                <div key={post.id}>
-                  <SectionReveal>
+                  <SectionReveal key={post.id} className="h-full">
                     <motion.article
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
                       whileHover={{ y: -4 }}
                       onClick={() => navigate(`/blog/${post.id}`)}
-                      className="group cursor-pointer rounded-xl border border-border bg-card overflow-hidden h-full flex flex-col transition-shadow hover:shadow-lg"
+                      className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border border-border bg-card transition-shadow hover:shadow-lg"
                     >
                     {/* Image */}
-                    <div className="relative h-48 sm:h-56 overflow-hidden bg-accent">
+                    <div className="relative aspect-[16/10] overflow-hidden bg-accent">
                       <img
                         src={post.image}
                         alt={post.title}
@@ -90,7 +92,7 @@ const BlogPage = () => {
                     </div>
 
                     {/* Content */}
-                    <div className="p-6 flex flex-col flex-1">
+                    <div className="flex flex-1 flex-col p-6">
                       {/* Date */}
                       <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
                         <Calendar size={14} />
@@ -105,13 +107,13 @@ const BlogPage = () => {
                       </h2>
 
                       {/* Description */}
-                      <p className="text-sm text-muted-foreground leading-relaxed flex-1 line-clamp-3 mb-4">
+                      <p className="mb-6 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
                         {post.description}
                       </p>
 
                       {/* Read More Link */}
-                      <div className="flex items-center gap-1.5 text-sm font-medium text-primary">
-                        Read more
+                      <div className="mt-auto flex items-center gap-1.5 text-sm font-medium text-primary">
+                        {t.blog.readMore}
                         <ArrowRight
                           size={16}
                           className="transition-transform group-hover:translate-x-1"
@@ -120,7 +122,6 @@ const BlogPage = () => {
                     </div>
                   </motion.article>
                   </SectionReveal>
-                </div>
               ))}
             </div>
             )}

@@ -84,11 +84,11 @@ const Contact = () => {
           <SectionReveal>
             <div className="space-y-6">
               <a
-                href="mailto:hello@example.com"
+                href="mailto:ttdat.ak@gmail.com"
                 className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors"
               >
                 <Mail size={18} />
-                <span className="text-sm">hello@example.com</span>
+                <span className="text-sm">ttdat.ak@gmail.com</span>
               </a>
               <a
                 href="https://github.com"
