@@ -117,7 +117,8 @@ const BlogDetail = () => {
               </h1>
 
               {/* Description */}
-              <p className="text-xl text-muted-foreground leading-relaxed mb-8">
+              <p className="text-xl text-muted-foreground leading-relaxed mb-8"
+              >
                 {post.description}
               </p>
 
@@ -138,35 +139,11 @@ const BlogDetail = () => {
               transition={{ delay: 0.2 }}
               className="max-w-3xl mx-auto"
             >
-              <div className="prose prose-lg dark:prose-invert prose-headings:text-foreground prose-p:text-muted-foreground prose-strong:text-foreground prose-a:text-primary prose-code:text-foreground prose-pre:bg-accent prose-pre:border prose-pre:border-border max-w-none">
+              <div 
+              className="prose prose-lg dark:prose-invert prose-headings:text-foreground prose-p:text-muted-foreground prose-strong:text-foreground prose-a:text-primary prose-code:text-foreground prose-pre:bg-accent prose-pre:border prose-pre:border-border max-w-none"
+              dangerouslySetInnerHTML={{ __html: post.content }} >
                 {/* Simple content rendering - splitting by newlines */}
-                {post.content.split('\n').map((paragraph, index) => {
-                  if (paragraph.trim() === '') return null;
-                  
-                  // Handle headings
-                  if (paragraph.startsWith('# ')) {
-                    return <h1 key={index}>{paragraph.replace('# ', '')}</h1>;
-                  }
-                  if (paragraph.startsWith('## ')) {
-                    return <h2 key={index}>{paragraph.replace('## ', '')}</h2>;
-                  }
-                  if (paragraph.startsWith('### ')) {
-                    return <h3 key={index}>{paragraph.replace('### ', '')}</h3>;
-                  }
-                  
-                  // Handle code blocks
-                  if (paragraph.startsWith('```')) {
-                    return null; // Skip code block markers for now
-                  }
-                  
-                  // Handle bold text
-                  if (paragraph.startsWith('**') && paragraph.endsWith('**')) {
-                    return <p key={index}><strong>{paragraph.replace(/\*\*/g, '')}</strong></p>;
-                  }
-                  
-                  // Regular paragraphs
-                  return <p key={index}>{paragraph}</p>;
-                })}
+                
               </div>
             </motion.div>
 
