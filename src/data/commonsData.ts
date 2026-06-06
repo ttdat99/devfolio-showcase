@@ -9,7 +9,7 @@ interface SheetResponse {
   values: string[][];
 }
 
-interface SheetRow {
+export interface SheetRow {
   id: string;
   name: string;
   parent_id: string | null;
@@ -74,6 +74,12 @@ export const fetchSkills = async (): Promise<SkillCategory[]> => {
     // Return fallback data on error
     return fallbackSkills;
   }
+};
+
+export const fetchRawSkillRows = async (): Promise<SheetRow[]> => {
+  const res = await fetch(SHEET_API_URL);
+  const data: SheetResponse = await res.json();
+  return data.values.slice(1).map((r) => ({ id: r[0] || "", name: r[1] || "", parent_id: r[2] || null }));
 };
 
 // Fallback data for development or if API fails

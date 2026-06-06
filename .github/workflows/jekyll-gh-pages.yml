@@ -37,6 +37,11 @@ jobs:
 
       - name: Build project (Vite)
         run: npm run build
+        env:
+          VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
+          VITE_ADMIN_EMAILS: ${{ secrets.VITE_ADMIN_EMAILS }}
+          VITE_SHEETS_WRITE_URL: ${{ secrets.VITE_SHEETS_WRITE_URL }}
+          VITE_SHEETS_WRITE_TOKEN: ${{ secrets.VITE_SHEETS_WRITE_TOKEN }}
 
       - name: Upload build artifact
         uses: actions/upload-pages-artifact@v3
